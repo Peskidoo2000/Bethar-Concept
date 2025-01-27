@@ -8,22 +8,26 @@ const Billing = () => {
   const {cart} = useContext(ProductContext);
   const totalPrice = cart.reduce((sum, item) => sum + item.total, 0);
 
-  console.log("cart from billing", cart);
-
-  const generateWhatsAppMessage = (cart, total) => {
+  
+  const generateWhatsAppMessage = (cart, totalPrice) => {
     let message = "Hello, I want to order the following items:\n\n";
   
     cart.forEach((product, index) => {
-      message += `${index + 1}. ${product.name} - ${product.description} - ${product.price}\n`;
+      const name = product?.name || "N/A";
+      const quantity = product?.quantity || "0";
+      const price = product?.price || "0";
+      message += `${index + 1}. ${name} - ${quantity} - ${price}$\n`;
     });
   
-    message += `\nTotal Amount: ${totalPrice}\nThank you!`;
+    message += `\nTotal Amount: ${totalPrice}$\nThank you!`;
   
-    return message;
-  };
-  const phoneNumber = "09074904054";
-  const message = generateWhatsAppMessage(cart, totalPrice);
-  const whatsappLink = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+    return encodeURIComponent(message); 
+};
+
+const phoneNumber = "2349079404750"; 
+const message = generateWhatsAppMessage(cart, totalPrice); 
+const whatsappLink = `https://wa.me/${phoneNumber}?text=${message}`;
+window.location.href = whatsappLink; 
    
     
   
@@ -40,8 +44,8 @@ const Billing = () => {
             </tr>
           </thead>
           <tbody>
-            {cart.map((item) => (
-              <tr key={item.objectId}>
+            {cart.map((item, index) => (
+              <tr key={item.objectId || index}>
                 <td>{item.name}</td>
                 <td>{item.quantity}</td>
                 <td>{item.price}</td>
@@ -59,7 +63,6 @@ const Billing = () => {
         <div className="payment">
             <p className="payment-word"> Pay with Vendor</p>
             <div className="sub-child-apart2"> 
-       <button onClick={() => window.open("https://www.facebook.com/profile.php?id=61567240883410&mibextid=ZbWKwL", "_blank")}className="social-media1"><FacebookRoundedIcon/></button>
       <button onClick={() => window.open(whatsappLink, "_blank")} className="social-media2"><WhatsAppIcon/></button>
     </div>
         </div>

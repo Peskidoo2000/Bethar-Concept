@@ -66,10 +66,10 @@ const Home = () =>{
   {displayProduct.map((item, index) => {
     const product = productState.find((p) => p.id === item.objectId);
     return (
-    <Item key={item.id} className="product-card"> 
+    <Item key={item.id || index} className="product-card"> 
       <CardMedia
         sx={{ height: 60 }}
-        image={item?.Image || fallbackForCategory?.[index % fallbackForCategory?.length]?.img}
+        image= {item?.Image || fallbackForCategory?.[index % fallbackForCategory?.length]?.img || "./assets/Beans flour.jpeg"}
         title={item.title}
         className="card-media"
       />
@@ -120,7 +120,7 @@ const Home = () =>{
             <p className='sub-child-child-features2'>Crush Grocery</p>
             <Stack direction="row" spacing={1} className="stack">
             <BoltIcon className='sub-child-child-features3'/>
-            <p clas1sName='sub-child-child-features4'>Delivery in 12 minutes</p>
+            <p className='sub-child-child-features4'>Delivery in 12 minutes</p>
             </Stack>
           </div>
       </div>
@@ -241,11 +241,11 @@ const Home = () =>{
     {displaySelected.map((item, index) => {
        const product = productState.find((p) => p.id === item.objectId);
        return (
-    <Grid item sm={2} md={4} key={item.id}>
+    <Grid item={true} sm={2} md={4} key={item.id || index}>
         <Item className ="product-card">
           <CardMedia
                 sx={{ height: 80 }}
-                image={item?.Image || fallbackForCategory?.[index % fallbackForCategory?.length]?.img}
+                image={item?.Image || fallbackForCategory?.[index % fallbackForCategory?.length]?.img || "./assets/cashewnut.jpg"}
                 title={item.title}
                 className="card-media"
             />

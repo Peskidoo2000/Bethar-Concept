@@ -35,7 +35,7 @@ return(
   {displayProductOverall.map((item, index) => {
     const product = productState.find((p) => p.id === item.objectId);
     return (
-    <Item key={item.id} className="product-card"> 
+    <Item key={item.id || index} className="product-card">
       <CardMedia
         sx={{ height: 60 }}
         image={item?.Image || fallbackForCategory?.[index % fallbackForCategory?.length]?.img}

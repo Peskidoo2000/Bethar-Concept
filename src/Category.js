@@ -66,7 +66,7 @@ return(
     {displaySelectedOverall.map((item, index) => {
        const product = productState.find((p) => p.id === item.objectId);
        return (
-    <Grid item sm={2} md={4} key={item.id}>
+        <Grid item={true} sm={2} md={4} key={item.id || index}>
         <Item className ="product-card">
           <CardMedia
                 sx={{ height: 80 }}

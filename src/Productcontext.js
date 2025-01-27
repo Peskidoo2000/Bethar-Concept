@@ -1,6 +1,7 @@
 // productcontext.js
 import React, { createContext, useState, useEffect, useCallback, useMemo } from 'react';
 import Backendless from './Backendless';
+import { Description } from '@mui/icons-material';
 
 const ProductContext = createContext();
 
@@ -81,13 +82,20 @@ const ProductProvider = ({ children }) => {
   }, []);
 
  
-  const searchProduct = async ()=>{
-    if (searchQuery.trim() ==="") return;
-
-    if (!searchQuery) {
-      console.log('Search query is empty');
+  const searchProduct = async (query)=>{
+    if (query.trim() === "") {
+      console.log("Search query is empty. Fetching default product data...");
+      
+     
+      try {
+        const defaultProducts = await Backendless.Data.of("Products").find();
+        setProducts(defaultProducts);
+      } catch (error) {
+        console.error("Error fetching default product data", error);
+      }
       return;
     }
+
     console.log(`Searching for: ${searchQuery}`);
 
     const whereClause = `Name LIKE '%${searchQuery}%' OR Description LIKE '%${searchQuery}%'`;
@@ -98,14 +106,12 @@ const ProductProvider = ({ children }) => {
 
 try{
   const searchResult =  await Backendless.Data.of("Products").find(queryBuilder)
-  if(searchResult.length > 0){
-  setProducts(searchResult)
-  }
-  else{
-    setProducts([])
-    alert("No search Result found")
-  }
-  setSearchQuery("")
+  if (searchResult.length > 0) {
+    setProducts(searchResult);
+  } else {
+    setProducts([]);
+    console.warn("No search result found");
+  } 
 }
  catch(error){
   console.error('error searchin product', error);
@@ -148,6 +154,7 @@ useEffect(() => {
     id:product.objectId,
     name:product.Name,
     price:product.Price,
+    description: product.Description,
     quantity: 0,
     display: "+",
     buttonClass: "add-button",
@@ -206,7 +213,7 @@ const updateProductState = (id, action) => {
             : item
         );
       } else {
-        // Remove product from cart if quantity reaches 0
+      
         return prevCart.filter((item) => item.id !== id);
       }
     }
@@ -235,18 +242,22 @@ useEffect(() => {
   
   const getFallbackImages =(category)=>{
     const images = fallBackImages[category] || [];
-    return images.slice(-4)
+    return images.length > 0 ? images.slice(-4) : [];
   }
+
   const fallbackForCategory = getFallbackImages(selectedCategory);
 
 const flattenedProducts = Object.values(displayProduct).flat(); // Flatten the object of arrays
 const slicedProducts = flattenedProducts.slice(0, 10); // Take only the first 10
 
 // Add fallback images to products
-const productsWithFallback = slicedProducts.map((item, index) => ({
-  ...item,
-  Image: item.Image || fallbackForCategory[index % fallbackForCategory.length]?.img, // Use fallback
-}));
+const productsWithFallback = useMemo(() => {
+  return slicedProducts.map((item, index) => ({
+    ...item,
+    Image: item.Image || fallbackForCategory[index % fallbackForCategory.length]?.img || '/assets/default.jpg',
+  }));
+}, [slicedProducts]);
+
 
 useEffect(() => {
   if (products.length === 0) {
@@ -254,7 +265,7 @@ useEffect(() => {
   } else {
     setDisplayProduct(products.slice(0, 10));
   }
-}, [products, productsWithFallback]);  
+}, [products]);  
 
 
 
@@ -264,11 +275,11 @@ useEffect(() => {
   } else {
     setDisplayProductOverall(products);
   }
-}, [products, productsWithFallback])
+}, [products])
 
   return (
     
-    <ProductContext.Provider value={{ fallBackImages, filterProductsByCategory, searchProduct, searchQuery, setSearchQuery, cart, displayProductOverall, displaySelectedOverall, products, selectedCategory, setSelectedCategory, displayProduct, productState, updateProductState, cartCount, displaySelected }}>
+    <ProductContext.Provider value={{ fallBackImages, filterProductsByCategory, searchProduct, searchQuery, setSearchQuery, cart, displayProductOverall, displaySelectedOverall, products, selectedCategory, setSelectedCategory, displayProduct, productState, updateProductState, cartCount, displaySelected, }}>
       {children}
     </ProductContext.Provider>
   );

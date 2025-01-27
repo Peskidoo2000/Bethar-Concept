@@ -516,6 +516,7 @@ top: -0.6rem
     
     .parent-apart{
       margin: 1rem;
+      width: 90%;
       border-radius: 1rem;
       background-color: #80125bf5;
       position: relative;
@@ -910,9 +911,11 @@ top: -0.6rem
     .navbar-brand-form{
           width: 48rem;
         }
-    
+    .footer{
+      top: 22rem;
+    }
         .parent-apart{
-          top: 20rem;
+          top: 17rem;
         }
 
     .advert-img{

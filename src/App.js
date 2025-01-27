@@ -46,18 +46,19 @@ function Main(){
 <div className="container-fluid navigator">
   <img src='./assets/bethar logo.jpg' alt='our_logo' className="bethar_logo"/>
  <p className="navbar-brand">Bethar Concept</p>
- <form className="navbar-brand-form" onSubmit={(e) => { e.preventDefault(); searchProduct(); }}>
+ <form className="navbar-brand-form" onSubmit={(e) => { e.preventDefault();}}>
  <div className="search">
- 
-            
-
               <SearchIcon  
               onClick={searchProduct}
               className="search"/>     
             <input
              type="text" 
              value={searchQuery || ""}
-             onChange={(e)=>setSearchQuery(e.target.value)}
+             onChange={(e) => {
+              const query = e.target.value;
+              setSearchQuery(query); // Update the state
+              searchProduct(query); // Call the search function on each change
+            }}
             style={{ width: '100%'}} 
             className="search-field" 
             placeholder="Search...." />

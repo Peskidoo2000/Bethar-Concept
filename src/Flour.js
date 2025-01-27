@@ -30,19 +30,18 @@ const Flour =() =>{
         productState, 
         updateProductState, 
         fallbackForCategory,
-        fallBackImages
+        fallBackImages,
         } = useContext(ProductContext);
 
 
         useEffect(() => {
-            const filterBySelection = filterProductsByCategory(category)
-            if (filterBySelection.length === 0) {
-              setDisplayCategory(fallBackImages[category] || []);
-            } else {
-                setDisplayCategory(filterBySelection);
-            }
-          }, [fallBackImages, filterProductsByCategory]);
-
+          const filterBySelection = filterProductsByCategory(category)
+          if (filterBySelection.length === 0) {
+            setDisplayCategory(fallBackImages[category] || []);
+          } else {
+              setDisplayCategory(filterBySelection);
+          }
+        }, [fallBackImages, filterProductsByCategory]);
 return(
     <div> 
          <p className='overall-category'>Bethar Flour Product </p>
@@ -52,7 +51,7 @@ return(
     {displayCategory.map((item, index) => {
        const product = productState.find((p) => p.id === item.objectId);
        return (
-    <Grid item sm={2} md={4} key={item.id}>
+        <Grid item={true} sm={2} md={4} key={item.id || index}>
         <Item className ="product-card">
           <CardMedia
                 sx={{ height: 80 }}
